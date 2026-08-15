@@ -6,17 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DiaryEntry;
+use Carbon\Carbon;
 
 class DiaryController extends Controller
 {
+    // --- 1. FUNGSI UNTUK MENYIMPAN CURHATAN ---
     public function store(Request $request)
     {
-        // 1. CEK GUEST LIMIT: Kalau belum login dan udah pernah nyoba, lempar ke Register
+        // CEK GUEST LIMIT
         if (!Auth::check() && session()->has('has_tried_guest')) {
             return redirect()->route('register')->with('warning', 'Jatah coba gratis habis nih. Yuk daftar buat lanjut curhat dan simpan riwayat awanmu!');
         }
 
-        // 2. Validasi + Batas Karakter
+        // CEK BATAS MAKSIMAL 3x SEHARI (Khusus User Login)
+        if (Auth::check()) {
+            $todayCount = \App\Models\DiaryEntry::where('user_id', Auth::id())
+                                    ->whereDate('created_at', \Carbon\Carbon::today())
+                                    ->count();
+
+            if ($todayCount >= 3) {
+                return back()->with('error', 'Wah, batas curhat harianmu (3x) sudah penuh. Biarkan awannya istirahat dulu ya, besok kita cerita lagi! ☁️💤');
+            }
+        }
+
         $request->validate([
             'content' => 'required|string|max:1000',
         ], [
@@ -25,7 +37,7 @@ class DiaryController extends Controller
 
         $curhatan = $request->input('content');
 
-        // 3. Prompt Engineering JSON (Sama kayak sebelumnya)
+        // Prompt Gemini
         $prompt = "Kamu adalah psikolog dan sistem analisis emosi. Baca curhatan berikut dan berikan analisis emosi utama beserta saran suportif.
         WAJIB merespon HANYA dengan format JSON murni persis seperti struktur di bawah ini, tanpa awalan atau akhiran markdown.
 
@@ -33,13 +45,6 @@ class DiaryController extends Controller
             \"cloud_type\": \"pilih salah satu: cerah, hujan, badai, mendung, atau cinta\",
             \"ai_suggestion\": \"Kalimat saran dan motivasi singkat maksimal 2 kalimat yang menenangkan.\"
         }
-
-        Panduan pilihan cloud_type:
-        - 'cerah' (positif, senang, bersyukur)
-        - 'hujan' (sedih, kecewa, menangis)
-        - 'badai' (marah, kesal, emosi tinggi)
-        - 'mendung' (lelah, bingung, khawatir)
-        - 'cinta' (romantis, jatuh cinta, kasih sayang)
 
         Curhatan: \"" . $curhatan . "\"";
 
@@ -55,7 +60,6 @@ class DiaryController extends Controller
                 'input' => $prompt
             ]);
 
-            // TANGKAP ERROR 429 (Kena Limit Antrean)
             if ($response->status() === 429) {
                 return back()->with('error', 'Waduh, awannya lagi penuh antrean nih. Tunggu sekitar 1 menit lalu coba ceritain lagi ya!');
             }
@@ -91,20 +95,16 @@ class DiaryController extends Controller
                     $awan = 'cerah';
                 }
 
-                // 4. LOGIKA PEMISAHAN USER DAN GUEST
                 if (Auth::check()) {
-                    // Kalau User: Simpan ke Database
-                    DiaryEntry::create([
+                    \App\Models\DiaryEntry::create([
                         'user_id' => Auth::id(),
                         'content' => $curhatan,
                         'cloud_type' => $awan,
                         'ai_suggestion' => $saran,
                     ]);
                 } else {
-                    // Kalau Guest: Simpan ke Session aja dan tandai dia udah nyoba
                     session([
                         'has_tried_guest' => true,
-                        // Kita simpan datanya di session buat di-transfer pas dia register nanti (Bonus UX)
                         'pending_guest_curhatan' => $curhatan,
                         'pending_guest_awan' => $awan,
                         'pending_guest_saran' => $saran,
@@ -122,5 +122,34 @@ class DiaryController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Koneksi ke awan terputus. Pastikan internetmu stabil dan coba lagi.');
         }
+    }
+
+    // --- 2. FUNGSI UNTUK MENAMPILKAN KALENDER RIWAYAT ---
+    public function history(Request $request)
+    {
+        $month = $request->input('month', \Carbon\Carbon::now()->month);
+        $year = $request->input('year', \Carbon\Carbon::now()->year);
+
+        $date = \Carbon\Carbon::createFromDate($year, $month, 1);
+        $daysInMonth = $date->daysInMonth;
+        $firstDayOfWeek = $date->copy()->startOfMonth()->isoWeekday();
+
+        $entries = \App\Models\DiaryEntry::where('user_id', Auth::id())
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Mengelompokkan data berdasarkan tanggal (1 hari bisa isi 1, 2, atau 3 data)
+        $entriesByDay = [];
+        foreach ($entries as $entry) {
+            $day = (int) $entry->created_at->format('j');
+            if (!isset($entriesByDay[$day])) {
+                $entriesByDay[$day] = [];
+            }
+            $entriesByDay[$day][] = $entry;
+        }
+
+        return view('history', compact('entriesByDay', 'daysInMonth', 'firstDayOfWeek', 'date'));
     }
 }

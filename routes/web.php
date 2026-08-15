@@ -3,20 +3,20 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// KANDANG AUTH: Cuma bisa diakses kalau user udah login
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    // Breeze default-nya ngelempar ke /dashboard abis login.
-    // Kita belokin otomatis ke rute / (home) lu.
-    Route::get('/dashboard', function () {
+// Breeze default-nya ngelempar ke /dashboard abis login.
+// Kita belokin otomatis ke rute / (home) lu.
+Route::get('/dashboard', function () {
         return redirect('/');
     })->name('dashboard');
 
-    // Rute ini WAJIB ada ->name('home') di ujungnya
+// Rute ini WAJIB ada ->name('home') di ujungnya
     Route::get('/', function () {
         return view('home');
     })->name('home');
 
+
+// KANDANG AUTH: Cuma bisa diakses kalau user udah login
+Route::middleware(['auth', 'verified'])->group(function () {
     // Rute ini WAJIB ada ->name('profile')
     Route::get('/profil', function () {
         return view('profile');
@@ -38,6 +38,6 @@ Route::middleware('auth')->group(function () {
 });
 
 // Rute buat nangkep submit curhatan
-Route::post('/diary', [App\Http\Controllers\DiaryController::class, 'store'])->name('diary.store');
+Route::post('/diary', [App\Http\Controllers\DiaryController::class, 'store'])->name('diary.store')->middleware('throttle:2,1');
 
 require __DIR__.'/auth.php';

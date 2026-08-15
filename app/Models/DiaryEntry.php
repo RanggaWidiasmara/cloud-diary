@@ -14,6 +14,7 @@ class DiaryEntry extends Model
         'user_id',
         'content',
         'cloud_type',
+        'ai_suggestion',
     ];
 
     // Relasi balik ke User (Satu curhatan milik satu user)

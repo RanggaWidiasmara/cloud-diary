@@ -1,0 +1,76 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260827185645
+Username: DESKTOP-G25BN7V\WongKeren
+RunAs User: DESKTOP-G25BN7V\WongKeren
+Configuration Name: 
+Machine: DESKTOP-G25BN7V (Microsoft Windows NT 10.0.19045.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\WongKeren\AppData\Local\Programs\Microsoft VS Code\6a44c352bd\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 24196
+PSVersion: 5.1.19041.6456
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.19041.6456
+BuildVersion: 10.0.19041.6456
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is log_laravel.txt
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>composer install
+   INFO  Discovering packages.
+
+  laravel/breeze .............................................................................................. DONE
+  laravel/pail ................................................................................................ DONE
+  laravel/sail ................................................................................................ DONE
+  laravel/tinker .............................................................................................. DONE
+  nesbot/carbon ............................................................................................... DONE
+  nunomaduro/collision ........................................................................................ DONE
+  nunomaduro/termwind ......................................................................................... DONE
+
+81 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>copy .env.example .env
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan key:generate
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>npm install
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>npm audit fix
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan migrate
+
+]633;D;1]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan key:generate
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+]633;D]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan key:generate --show
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan config:clear
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan migrate
+
+]633;D;0]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan serve
+
+PS>TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+]633;D;1]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>php artisan serve
+
+PS>TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+]633;D;1]633;A]633;P;Cwd=D:\x5c010.PemWebndUI\x5cAlfatihah Project Diary\x5ccloud-diaryPS D:\010.PemWebndUI\Alfatihah Project Diary\cloud-diary> ]633;B
+PS>Stop-Transcript
+**********************
+Windows PowerShell transcript end
+End time: 20260827220239
+**********************

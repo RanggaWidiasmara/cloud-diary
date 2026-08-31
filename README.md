@@ -35,6 +35,7 @@ composer install
 cp .env.example .env
 ```
 (Penting: Isi GEMINI_API_KEY dan kredensial database MySQL Anda di dalam file .env)
+
 5. Generate application key:
 ```bash
 php artisan key:generate

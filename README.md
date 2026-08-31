@@ -44,7 +44,7 @@ php artisan key:generate
 ```bash
 php artisan migrate
 ```
-Jalankan server lokal:
+7. Jalankan server lokal:
 ```bash
 php artisan serve
 ```

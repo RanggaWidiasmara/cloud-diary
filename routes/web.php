@@ -38,3 +38,23 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// RUTE KHUSUS GURU BK
+Route::prefix('gurubk')->name('gurubk.')->group(function () {
+    
+    Route::get('/dashboard', function () { return view('gurubk.dashboard'); })->name('dashboard');
+    Route::get('/profil', function () { return view('gurubk.profil'); })->name('profil');
+    Route::get('/ringkasan', function () { return view('gurubk.ringkasan'); })->name('ringkasan');
+    Route::get('/triage', function () { return view('gurubk.triage'); })->name('triage');
+    Route::get('/riwayat', function () { return view('gurubk.riwayat'); })->name('riwayat');
+    
+    // Rute Dinamis Siswa
+    Route::get('/siswa/{tingkat}', function ($tingkat) { 
+        return view('gurubk.siswa', ['tingkat' => $tingkat]); 
+    })->name('siswa');
+    
+    Route::get('/pengguna', function () { return view('gurubk.pengguna'); })->name('pengguna');
+    Route::get('/angkatan', function () { return view('gurubk.angkatan'); })->name('angkatan');
+    Route::get('/pengaturan', function () { return view('gurubk.pengaturan'); })->name('pengaturan');
+
+});

@@ -9,15 +9,19 @@ class DiaryEntry extends Model
 {
     use HasFactory;
 
-    // Buka kunci biar kolom ini bisa diisi dari Controller
     protected $fillable = [
         'user_id',
         'content',
         'cloud_type',
         'ai_suggestion',
+        'ai_bk_recommendation', // <-- TAMBAHAN BARU: Saran khusus untuk Guru BK
     ];
 
-    // Relasi balik ke User (Satu curhatan milik satu user)
+    // INI KUNCI PRIVASINYA (Application-Level Encryption)
+    protected $casts = [
+        'content' => 'encrypted',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

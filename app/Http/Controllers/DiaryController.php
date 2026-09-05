@@ -37,6 +37,38 @@ class DiaryController extends Controller
 
         $curhatan = $request->input('content');
 
+        // --- MULAI FILTER TEKS NGAWUR DI SINI ---
+        $teksLower = strtolower(trim($curhatan));
+
+        // Pecah kalimat jadi array kata-kata
+        $kataArray = str_word_count($teksLower, 1);
+        $kataUnik = array_unique($kataArray); // Ngambil kata yang nggak kembar
+
+        // 1. Cek Minimal Kata
+        if (count($kataArray) < 4) {
+            return back()->with('error', 'Awan butuh cerita yang lebih panjang nih (minimal 4 kata). Yuk, ceritain lebih detail!');
+        }
+
+        // 2. Cek Karakter Berulang (Mencegah "aaaaa" atau "wkwkwkwk" tanpa spasi)
+        if (preg_match('/(.)\1{4,}/', $teksLower)) {
+            return back()->with('error', 'Ketikanmu sepertinya kurang jelas. Coba pakai bahasa yang biasa ya!');
+        }
+
+        // 3. Cek Repetisi Kata (Mencegah "wkwk wkwk wkwk wkwk")
+        // Kalau ngetik 4 kata atau lebih, tapi isi kata bedanya (unik) cuma 1 atau 2, fix nyepam!
+        if (count($kataUnik) < 3) {
+            return back()->with('error', 'Ceritanya kok diulang-ulang kata yang sama? Tulis kalimat yang bermakna yuk!');
+        }
+
+        // 4. Blacklist Kata Ngawur (Cek per kata)
+        $blacklist = ['hilih', 'tes', 'test', 'halo', 'hai', 'wkwk', 'wkwkwk', 'awok'];
+
+        // Jika SEMUA kata yang diketik ternyata ada di dalam blacklist
+        if (count(array_diff($kataArray, $blacklist)) === 0) {
+            return back()->with('error', 'Hmm, sepertinya itu bukan curhatan. Yuk tulis perasaanmu yang sebenarnya!');
+        }
+        // --- BATAS FILTER TEKS NGAWUR ---
+
         // Prompt Gemini
         $prompt = "Kamu adalah psikolog dan sistem analisis emosi. Baca curhatan berikut dan berikan analisis emosi utama beserta saran suportif.
         WAJIB merespon HANYA dengan format JSON murni persis seperti struktur di bawah ini, tanpa awalan atau akhiran markdown.
